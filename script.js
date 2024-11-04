@@ -100,4 +100,8 @@ function createChart(data) {
         }
     });
 }
+
 fetchCSVData();
+
+
+

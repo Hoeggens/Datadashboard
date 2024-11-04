@@ -19,12 +19,16 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
+    position: fixed;
+    background-image: url('image/waether.jfif');
 }
 
 header img {
     border-radius: 20%;
     height: 120px;
     width: 120px;
+    margin-right: 20%;
+    
 }
 
 header p {
@@ -34,6 +38,26 @@ header p {
     font-size: 1.2em;
     text-align: center;
 }
+footer {
+    background-color: #333;
+    color: #fff;
+   text-align: center;
+
+   
+  }
+  nav {
+
+    text-align: right;
+    padding: 10px 10px;
+    
+  }
+  a{
+    padding: 10px 50px;
+
+  }
+
+ 
+
 /* 
 .slider-container {
     display: flex;
