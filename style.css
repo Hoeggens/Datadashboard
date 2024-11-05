@@ -58,7 +58,7 @@ footer {
 
  
 
-/* 
+ /*
 .slider-container {
     display: flex;
     align-items: center;
@@ -71,11 +71,13 @@ footer {
 .year-label {
     min-width: 50px;
     text-align: center;
-} */
+} 
+    */
 .range-container {
     width: 300px;
     position: relative;
 }
+    
 .range-slider {
     width: 100%;
     position: relative;
