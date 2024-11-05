@@ -18,10 +18,10 @@
             upperValue = lowerValue;
         }
     
-        const percentageLower = (lowerValue / lowerSlider.max) * 100;
-        const percentageUpper = (upperValue / upperSlider.max) * 100;
-        range.style.left = `${percentageLower}%`;
-        range.style.width = `${percentageUpper - percentageLower}%`;
+        // const percentageLower = (lowerValue / lowerSlider.max) * 100;
+        // const percentageUpper = (upperValue / upperSlider.max) * 100;
+        // range.style.left = `${percentageLower}%`;
+        // range.style.width = `${percentageUpper - percentageLower}%`;
     
         lowerValueDisplay.textContent = lowerSlider.value;
         upperValueDisplay.textContent = upperSlider.value;
@@ -35,9 +35,9 @@
         const response = await fetch('temperature.csv');
 
         const data = await response.text();
-        // console.log(data);
+        console.log(data);
         const parsedData = parseCSV(data);
-
+        console.log(parsedData);
         createChart(parsedData);
 
         return parsedData;
@@ -51,8 +51,10 @@ function parseCSV(data) {
 
         const columns = row.split(',').map(col => col.trim());
 
-        const year = columns[3] ? columns[3].replace(/"/g, '') : null;
-        const avgTemp = columns[4] ? parseFloat(columns[4]) : null;
+        const year = columns[3];
+        const avgTemp = columns[4];
+        const city = columns[6];
+        const country = columns[8];
 
         if (year && !isNaN(avgTemp)) {
             results.push({ year, avgTemp });
@@ -67,7 +69,7 @@ function createChart(data) {
     const labels = data.map(item => item.year);
     const averages = data.map(item => item.avgTemp);
 
-    const temperatureChart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
