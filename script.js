@@ -17,11 +17,7 @@
             upperSlider.value = lowerValue;
             upperValue = lowerValue;
         }
-    
-        // const percentageLower = (lowerValue / lowerSlider.max) * 100;
-        // const percentageUpper = (upperValue / upperSlider.max) * 100;
-        // range.style.left = `${percentageLower}%`;
-        // range.style.width = `${percentageUpper - percentageLower}%`;
+
     
         lowerValueDisplay.textContent = lowerSlider.value;
         upperValueDisplay.textContent = upperSlider.value;
