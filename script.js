@@ -6,7 +6,7 @@ const range = document.getElementById('range');
 const countrySelect = document.getElementById('land');
 const citySelect = document.getElementById('stad');
 
-let originalData = null; // Хранение загруженных данных для фильтрации
+let originalData = null; 
 
 function updateSlider() {
     let lowerValue = parseInt(lowerSlider.value);
@@ -50,14 +50,14 @@ function parseCSV(data) {
         if (index === 0) return; // Skip the header row
 
         const columns = row.split(',').map(col => col.trim());
+
         const year = columns[3];
         const avgTemp = columns[4];
         const city = columns[6];
         const country = columns[8];
 
         if (year && !isNaN(avgTemp)) {
-            results.push({ year, avgTemp, city, country });
-            uniqueCountries.add(country);
+            results.push({ year, avgTemp });            uniqueCountries.add(country);
             uniqueCities.add(city);
         }
     });
@@ -84,59 +84,92 @@ function populateFilters(parsedData) {
     });
 }
 
-function createChart(data) {
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const labels = data.data.map(item => item.year);
-    const averages = data.data.map(item => item.avgTemp);
+        function createChart(data) {
+            const ctx = document.getElementById('myChart').getContext('2d');
+        
+            const labels = Array.from(new Set(data.map(item => item.year))).sort();
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Average Temperature (°F)',
-                data: averages,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 1,
-                fill: true,
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Temperature (°F)'
-                    }
+            const groupedData = {};
+            
+            data.forEach(item => {
+                const { country, city, year, avgTemp } = item;
+            
+                if (!groupedData[country]) {
+                    groupedData[country] = {};
+                }
+            
+                if (!groupedData[country][city]) {
+                    groupedData[country][city] = {};
+                }
+            
+                groupedData[country][city][year] = avgTemp;
+            });
+            
+            const datasets = [];
+            
+            Object.keys(groupedData).forEach(country => {
+                Object.keys(groupedData[country]).forEach(city => {
+                    const cityData = labels.map(year => groupedData[country][city][year] || null);
+            
+                    datasets.push({
+                        label: `${city}, ${country}`,
+                        data: cityData,
+                        borderWidth: 2,
+                        fill: false,
+                        borderColor: getRandomColor(),
+                    });
+                });
+            });
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
                 },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Year'
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Temperature (°F)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
                     }
                 }
+            });
+        }
+            
+        function getRandomColor() {
+            const r = Math.floor(Math.random() * 255);
+            const g = Math.floor(Math.random() * 255);
+            const b = Math.floor(Math.random() * 255);
+            return `rgba(${r}, ${g}, ${b}, 0.7)`;
+        }
+        countrySelect.addEventListener('change', filterData);
+        citySelect.addEventListener('change', filterData);
+        
+        function filterData() {
+            const selectedCountry = countrySelect.value;
+            const selectedCity = citySelect.value;
+        
+            if (originalData) {
+                const filteredData = originalData.data.filter(item => {
+                    return (!selectedCountry || item.country === selectedCountry) &&
+                           (!selectedCity || item.city === selectedCity);
+                });
+                createChart({ data: filteredData });
             }
         }
-    });
-}
 
-countrySelect.addEventListener('change', filterData);
-citySelect.addEventListener('change', filterData);
+    fetchCSVData();
 
-function filterData() {
-    const selectedCountry = countrySelect.value;
-    const selectedCity = citySelect.value;
 
-    if (originalData) {
-        const filteredData = originalData.data.filter(item => {
-            return (!selectedCountry || item.country === selectedCountry) &&
-                   (!selectedCity || item.city === selectedCity);
-        });
-        createChart({ data: filteredData });
-    }
-}
 
-fetchCSVData();
