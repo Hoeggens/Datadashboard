@@ -144,7 +144,6 @@ function createChart(parsedData) {
                         text: 'Year'
                     }
                 }
-<<<<<<< HEAD
             });
         }
         
@@ -169,8 +168,6 @@ function createChart(parsedData) {
                            (!selectedCity || item.city === selectedCity);
                 });
                 createChart({ data: filteredData });
-=======
->>>>>>> f54c25305e935cf911d55515c55f155f428338f4
             }
         }
     });
