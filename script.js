@@ -35,7 +35,7 @@ async function fetchCSVData() {
     const response = await fetch('temperature.csv');
     const data = await response.text();
     const parsedData = parseCSV(data);
-    originalData = parsedData; // Сохраняем данные
+    originalData = parsedData; // safe dates
     populateFilters(parsedData);
     createChart(parsedData);
 }
