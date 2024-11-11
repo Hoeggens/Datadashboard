@@ -23,7 +23,7 @@ function parseCSV(data) {
         if (index === 0) return;
 
         const columns = row.split(',').map(col => col.trim());
-
+        
         const year = columns[3];
         const avgTemp = columns[4];
         const city = columns[6];
@@ -63,27 +63,27 @@ function createChart(parsedData) {
 
     const labels = Array.from(new Set(parsedData.data.map(item => item.year))).sort();
 
-    const groupedData = {};
+    const data = {};
 
     parsedData.data.forEach(item => {
         const { country, city, year, avgTemp } = item;
 
-        if (!groupedData[country]) {
-            groupedData[country] = {};
+        if (!data[country]) {
+            data[country] = {};
         }
 
-        if (!groupedData[country][city]) {
-            groupedData[country][city] = {};
+        if (!data[country][city]) {
+            data[country][city] = {};
         }
 
-        groupedData[country][city][year] = avgTemp;
+        data[country][city][year] = avgTemp;
     });
 
     const datasets = [];
 
-    Object.keys(groupedData).forEach(country => {
-        Object.keys(groupedData[country]).forEach(city => {
-            const cityData = labels.map(year => groupedData[country][city][year] || null);
+    Object.keys(data).forEach(country => {
+        Object.keys(data[country]).forEach(city => {
+            const cityData = labels.map(year => data[country][city][year] || null);
 
             datasets.push({
                 label: `${city}, ${country}`,
