@@ -1,35 +1,8 @@
-const lowerSlider = document.getElementById('lower');
-const upperSlider = document.getElementById('upper');
-const lowerValueDisplay = document.getElementById('lower-value');
-const upperValueDisplay = document.getElementById('upper-value');
 const countrySelect = document.getElementById('land');
 const citySelect = document.getElementById('stad');
 
 let originalData = null;
 let chart = null; 
-
-function updateSlider() {
-    let lowerValue = parseInt(lowerSlider.value);
-    let upperValue = parseInt(upperSlider.value);
-
-    if (lowerValue > upperValue) {
-        lowerSlider.value = upperValue;
-        lowerValue = upperValue;
-    }
-
-    if (upperValue < lowerValue) {
-        upperSlider.value = lowerValue;
-        upperValue = lowerValue;
-    }
-
-    lowerValueDisplay.textContent = lowerSlider.value;
-    upperValueDisplay.textContent = upperSlider.value;
-}
-
-lowerSlider.addEventListener('input', updateSlider);
-upperSlider.addEventListener('input', updateSlider);
-
-updateSlider();
 
 async function fetchCSVData() {
     const response = await fetch('temperature.csv');
