@@ -6,7 +6,7 @@ const range = document.getElementById('range');
 const countrySelect = document.getElementById('land');
 const citySelect = document.getElementById('stad');
 
-let originalData = null; 
+let originalData = null;
 
 function updateSlider() {
     let lowerValue = parseInt(lowerSlider.value);
@@ -35,7 +35,7 @@ async function fetchCSVData() {
     const response = await fetch('temperature.csv');
     const data = await response.text();
     const parsedData = parseCSV(data);
-    originalData = parsedData; // safe dates
+    originalData = parsedData;
     populateFilters(parsedData);
     createChart(parsedData);
 }
@@ -47,7 +47,7 @@ function parseCSV(data) {
     const uniqueCities = new Set();
 
     rows.forEach((row, index) => {
-        if (index === 0) return; // Skip the header row
+        if (index === 0) return;
 
         const columns = row.split(',').map(col => col.trim());
 
@@ -56,8 +56,9 @@ function parseCSV(data) {
         const city = columns[6];
         const country = columns[8];
 
-        if (year && !isNaN(avgTemp)) {
-            results.push({ year, avgTemp });            uniqueCountries.add(country);
+        if (year && !isNaN(avgTemp) && country != "NA" && city != "NA") {
+            results.push({ year, avgTemp, city, country });
+            uniqueCountries.add(country);
             uniqueCities.add(city);
         }
     });
@@ -84,66 +85,66 @@ function populateFilters(parsedData) {
     });
 }
 
-        function createChart(data) {
-            const ctx = document.getElementById('myChart').getContext('2d');
-        
-            const labels = Array.from(new Set(data.map(item => item.year))).sort();
+function createChart(parsedData) {
+    const ctx = document.getElementById('myChart').getContext('2d');
 
-            const groupedData = {};
-            
-            data.forEach(item => {
-                const { country, city, year, avgTemp } = item;
-            
-                if (!groupedData[country]) {
-                    groupedData[country] = {};
-                }
-            
-                if (!groupedData[country][city]) {
-                    groupedData[country][city] = {};
-                }
-            
-                groupedData[country][city][year] = avgTemp;
+    const labels = Array.from(new Set(parsedData.data.map(item => item.year))).sort();
+
+    const groupedData = {};
+
+    parsedData.data.forEach(item => {
+        const { country, city, year, avgTemp } = item;
+
+        if (!groupedData[country]) {
+            groupedData[country] = {};
+        }
+
+        if (!groupedData[country][city]) {
+            groupedData[country][city] = {};
+        }
+
+        groupedData[country][city][year] = avgTemp;
+    });
+
+    const datasets = [];
+
+    Object.keys(groupedData).forEach(country => {
+        Object.keys(groupedData[country]).forEach(city => {
+            const cityData = labels.map(year => groupedData[country][city][year] || null);
+
+            datasets.push({
+                label: `${city}, ${country}`,
+                data: cityData,
+                borderWidth: 2,
+                fill: false,
+                borderColor: getRandomColor(),
             });
-            
-            const datasets = [];
-            
-            Object.keys(groupedData).forEach(country => {
-                Object.keys(groupedData[country]).forEach(city => {
-                    const cityData = labels.map(year => groupedData[country][city][year] || null);
-            
-                    datasets.push({
-                        label: `${city}, ${country}`,
-                        data: cityData,
-                        borderWidth: 2,
-                        fill: false,
-                        borderColor: getRandomColor(),
-                    });
-                });
-            });
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: datasets
+        });
+    });
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Temperature (°F)'
+                    }
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Temperature (°F)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Year'
-                            }
-                        }
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Year'
                     }
                 }
+<<<<<<< HEAD
             });
         }
         
@@ -168,10 +169,34 @@ function populateFilters(parsedData) {
                            (!selectedCity || item.city === selectedCity);
                 });
                 createChart({ data: filteredData });
+=======
+>>>>>>> f54c25305e935cf911d55515c55f155f428338f4
             }
         }
+    });
+}
 
-    fetchCSVData();
+function getRandomColor() {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    return `rgba(${r}, ${g}, ${b}, 0.7)`;
+}
 
+countrySelect.addEventListener('change', filterData);
+citySelect.addEventListener('change', filterData);
 
+function filterData() {
+    const selectedCountry = countrySelect.value;
+    const selectedCity = citySelect.value;
 
+    if (originalData) {
+        const filteredData = originalData.data.filter(item => {
+            return (!selectedCountry || item.country === selectedCountry) &&
+                   (!selectedCity || item.city === selectedCity);
+        });
+        createChart({ data: filteredData, countries: originalData.countries, cities: originalData.cities });
+    }
+}
+
+fetchCSVData();
