@@ -23,11 +23,12 @@ function parseCSV(data) {
         if (index === 0) return;
 
         const columns = row.split(',').map(col => col.trim());
-        
-        const year = columns[3];
-        const avgTemp = columns[4];
-        const city = columns[6];
-        const country = columns[8];
+        const cleanColumns = columns.map(col => col.replace(/"/g, ''));
+
+        const year = cleanColumns[3];
+        const avgTemp = cleanColumns[4];
+        const city = cleanColumns[6];
+        const country = cleanColumns[8];
 
         if (year && !isNaN(avgTemp) && country != "NA" && city != "NA") {
             results.push({ year, avgTemp, city, country });
