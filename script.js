@@ -2,11 +2,11 @@ const lowerSlider = document.getElementById('lower');
 const upperSlider = document.getElementById('upper');
 const lowerValueDisplay = document.getElementById('lower-value');
 const upperValueDisplay = document.getElementById('upper-value');
-const range = document.getElementById('range');
 const countrySelect = document.getElementById('land');
 const citySelect = document.getElementById('stad');
 
 let originalData = null;
+let chart = null; 
 
 function updateSlider() {
     let lowerValue = parseInt(lowerSlider.value);
@@ -122,7 +122,11 @@ function createChart(parsedData) {
         });
     });
 
-    new Chart(ctx, {
+    if (chart) {
+        chart.destroy(); 
+    }
+
+    chart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
@@ -148,6 +152,7 @@ function createChart(parsedData) {
         }
     });
 }
+
 countrySelect.addEventListener('change', filterData);
 citySelect.addEventListener('change', filterData);
 
@@ -157,7 +162,6 @@ function getRandomColor() {
     const b = Math.floor(Math.random() * 255);
     return `rgba(${r}, ${g}, ${b}, 0.7)`;
 }
-
 
 function filterData() {
     const selectedCountry = countrySelect.value;
