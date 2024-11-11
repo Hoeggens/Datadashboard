@@ -144,34 +144,12 @@ function createChart(parsedData) {
                         text: 'Year'
                     }
                 }
-            });
-        }
-        
-        countrySelect.addEventListener('change', filterData);
-        citySelect.addEventListener('change', filterData);
-        
-        function getRandomColor() {
-            const r = Math.floor(Math.random() * 255);
-            const g = Math.floor(Math.random() * 255);
-            const b = Math.floor(Math.random() * 255);
-            return `rgba(${r}, ${g}, ${b}, 0.7)`;
-        }
-       
-        
-        function filterData() {
-            const selectedCountry = countrySelect.value;
-            const selectedCity = citySelect.value;
-        
-            if (originalData) {
-                const filteredData = originalData.data.filter(item => {
-                    return (!selectedCountry || item.country === selectedCountry) &&
-                           (!selectedCity || item.city === selectedCity);
-                });
-                createChart({ data: filteredData });
             }
         }
     });
 }
+countrySelect.addEventListener('change', filterData);
+citySelect.addEventListener('change', filterData);
 
 function getRandomColor() {
     const r = Math.floor(Math.random() * 255);
@@ -180,8 +158,6 @@ function getRandomColor() {
     return `rgba(${r}, ${g}, ${b}, 0.7)`;
 }
 
-countrySelect.addEventListener('change', filterData);
-citySelect.addEventListener('change', filterData);
 
 function filterData() {
     const selectedCountry = countrySelect.value;
