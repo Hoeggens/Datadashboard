@@ -17,4 +17,6 @@ Chart.js heter modulen jag vill att ni använder och filen med data är bifogad 
 
 Idag vill jag ha:
 
-Ett utkast till er webbsida som hanterar datan ovan. Se till att använda det ni behöver från datasetet.
+Er andra sprint i en ny branch kalla den sprint2 eller något liknande, försök dela upp era enskilda uppgifter i så isolerade bitar och brancher från sprint2 och öva på att göra PRs till er Feature-branch.
+
+Ni ska därefter släppa in någon från ett av de andra teamen som sedan ska granska er totala PR från sprint2 till Main på Checkpointen.
